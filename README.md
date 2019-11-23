@@ -31,10 +31,10 @@ docker run -d -it \
 `docker exec -it MarkLogic sh`
 
 ### Add converters to the Docker Container
-In case of using the MarkLogic Docker image, you'll have to download and install the converters into the docker container like:
+In case of using the MarkLogic Docker image, you'll have to download and install the converters into the docker container. To get the installer navigate to http://developer.marklogic.com and grab the `Curl URL` for the OS you need (most likely CentOS).
 ```sh
 docker exec -it MarkLogic sh
-curl --output /tmp/MarkLogicConverters.rpm <the url you get from http://developer.marklogic.com when clicking on the button to use Curl>
+curl --output /tmp/MarkLogicConverters.rpm <Curl URL>
 sudo yum install libgcc libgcc.i686 libstdc++ libstdc++.i686
 sudo rpm -i /tmp/MarkLogicConverters.rpm
 ```
