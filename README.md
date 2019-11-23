@@ -2,9 +2,9 @@
 My collection of useful commands.
 
 ## GIT
-### Remove unnecessary files from git and working directory
+### Remove unnecessary files from git
 Ths example removes Mac OS X files `.DS_Store` from all folders in the repo. Make sure to add it to `.gitignore` also!  
-If yo ualso want to remove files from disk, remove the `--cached` option.
+If you also want to remove files from disk, remove the `--cached` option.
 ```sh
 find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch --cached
 git commit -am "Removed unnecessary files"
@@ -13,7 +13,7 @@ git push
 
 ## MarkLogic
 ### Database configuration in json format
-Get the json structure of database configurations: http://localhost:8002/manage/v2/.
+Get the json structure of database configurations: http://localhost:8002/manage/v2/. Navigate to the information you need and add `&format=json` to the URL.
 
 ### Run MarkLogic from Docker Hub
 Run MarkLogic from the Docker Hub Community version. MarkLogic data will be persisted in the current (project) folder.
@@ -29,6 +29,15 @@ docker run -d -it \
 ```
 ### Shell into container
 `docker exec -it MarkLogic sh`
+
+### Add converters to the Docker Container
+In case of using the MarkLogic Docker image, you'll have to download and install the converters into the docker container like:
+```sh
+docker exec -it MarkLogic sh
+curl --output /tmp/MarkLogicConverters.rpm <the url you get from http://developer.marklogic.com when clicking on the button to use Curl>
+sudo yum install libgcc libgcc.i686 libstdc++ libstdc++.i686
+sudo rpm -i /tmp/MarkLogicConverters.rpm
+```
 
 ## Docker
 ### Saving an image to a TAR file
