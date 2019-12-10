@@ -15,6 +15,9 @@ git push
 ### Database configuration in json format
 Get the json structure of database configurations: http://localhost:8002/manage/v2/. Navigate to the information you need and add `&format=json` to the URL.
 
+### Log information from the management endpoint (also useful in case of Encryption At Rest)
+http://localhost:8002/manage/v2/logs?format=html&filename=ErrorLog.txt&start=2019-11-16%2012:00:00
+
 ### Run MarkLogic from Docker Hub
 Run MarkLogic from the Docker Hub Community version. MarkLogic data will be persisted in the current (project) folder.
 ```sh
@@ -95,8 +98,12 @@ This function uses the great services of https://my.locationiq.com/. Create an a
 /*
   Geocode an address
   Uses an API KEY from https://my.locationiq.com/
-  Free plan allows 1 lookup per second
+  Free plan allows 60 lookups per minute
   IMPORTANT: Make sure to run this lookup single-threaded!
+  When running as a custom step in Data Hub Framework:
+    - Make sure to set batchSize to the total amount of documents in your collection
+    - And set threadCount to 1. This makes sure the service lookups don't exceed 60 lookups per minute
+    - Also make sure the default time limit for your MarkLogic App Server is set accordingly (ex. 1000 docs -> 1000 / 60 = 17 minutes)
 */
 function geocode (address, api_key) {
   // Call the geocoding service and sleep for 1000 ms
@@ -107,7 +114,7 @@ function geocode (address, api_key) {
   // When the HTTP response equals 200, take the lat/lon result
   result = result.toArray();
   if (result[0].code == '200') {
-    console.log('GEOCODE: MATCH: ' + result);
+    console.log('GEOCODE: MATCH (' + result[0].code + ' / ' + result[0].message + ')');
     return {
       coordinate: {
         "lat": result[1].root[0].lat,
