@@ -75,3 +75,50 @@ docker ps -a
 docker container rm <id>
 docker image rm <id>
 ```
+
+## Shell tools
+### Split a file on newlines
+Takes a file `1000_device_data.json` and splits it into numbered output files.
+```sh
+awk '{f = "device_data_" NR ".json"; print $0 > f; close(f)}' 1000_device_data.json
+```
+
+## Test data generators
+### Mockaroo
+https://www.mockaroo.com
+### Person data
+https://www.mobilefish.com/services/random_test_data_generator/random_test_data_generator.php
+
+## Geo Coding an Address
+This function uses the great services of https://my.locationiq.com/. Create an account and a project specific public API key.
+```javascript
+/*
+  Geocode an address
+  Uses an API KEY from https://my.locationiq.com/
+  Free plan allows 1 lookup per second
+  IMPORTANT: Make sure to run this lookup single-threaded!
+*/
+function geocode (address, api_key) {
+  // Call the geocoding service and sleep for 1000 ms
+  address = xdmp.urlEncode(address);
+  let result = xdmp.httpGet('https://eu1.locationiq.com/v1/search.php?key=' + api_key + '&format=json&q=' + address);
+  xdmp.sleep(1000);
+
+  // When the HTTP response equals 200, take the lat/lon result
+  result = result.toArray();
+  if (result[0].code == '200') {
+    console.log('GEOCODE: MATCH: ' + result);
+    return {
+      coordinate: {
+        "lat": result[1].root[0].lat,
+        "lon": result[1].root[0].lon
+      },
+      "class": result[1].root[0].class,
+      "type": result[1].root[0].type
+    };
+  } else {
+    console.log('GEOCODE: ADDRES NOT FOUND (' + result[0].code + ' / ' + result[0].message + ')');
+    return {};
+  }
+}
+```
