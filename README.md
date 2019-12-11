@@ -105,27 +105,50 @@ This function uses the great services of https://my.locationiq.com/. Create an a
     - And set threadCount to 1. This makes sure the service lookups don't exceed 60 lookups per minute
     - Also make sure the default time limit for your MarkLogic App Server is set accordingly (ex. 1000 docs -> 1000 / 60 = 17 minutes)
 */
-function geocode (address, api_key) {
-  // Call the geocoding service and sleep for 1000 ms
+function geocode (address, api_key, log=false) {
   address = xdmp.urlEncode(address);
-  let result = xdmp.httpGet('https://eu1.locationiq.com/v1/search.php?key=' + api_key + '&format=json&q=' + address);
-  xdmp.sleep(1000);
-
-  // When the HTTP response equals 200, take the lat/lon result
-  result = result.toArray();
-  if (result[0].code == '200') {
-    console.log('GEOCODE: MATCH (' + result[0].code + ' / ' + result[0].message + ')');
-    return {
-      coordinate: {
-        "lat": result[1].root[0].lat,
-        "lon": result[1].root[0].lon
-      },
-      "class": result[1].root[0].class,
-      "type": result[1].root[0].type
-    };
+  
+  // First see if we cached this address already
+  let geodata;
+  let cache = cts.search(cts.andQuery([cts.collectionQuery("geodata"), cts.jsonPropertyValueQuery('address', address)]));
+  if (!fn.empty(cache)) {
+    if (log) {console.log('GEOCODE: CACHED RESULT')};
+    geodata = fn.head(cache).root.geodata;
   } else {
-    console.log('GEOCODE: ADDRES NOT FOUND (' + result[0].code + ' / ' + result[0].message + ')');
-    return {};
+    // Call the geocoding service and sleep for 1000 ms
+    let result = xdmp.httpGet('https://eu1.locationiq.com/v1/search.php?key=' + api_key + '&format=json&q=' + address);
+    xdmp.sleep(1000);
+    
+    result = result.toArray();
+    if (result[0].code == '200') {
+      // When the HTTP response equals 200, take the result from the service
+      if (log) {console.log('GEOCODE: MATCH (' + result[0].code + ' / ' + result[0].message + ')')};
+      geodata = result[1].root[0];
+    } else {
+      // When there is another HTTP response, return an empty result
+      if (log) {console.log('GEOCODE: ADDRES NOT FOUND (' + result[0].code + ' / ' + result[0].message + ')')};
+      geodata = xdmp.toJSON({});
+    }
+    
+    // Cache the data for future use
+    let jsInsert = `
+      declareUpdate();
+      let geodoc = {
+        "address": "` + address + `",
+        "geodata": ` + geodata + `
+      };
+      xdmp.documentInsert(sem.uuidString(), geodoc, {collections: 'geodata'});`
+    xdmp.eval(jsInsert, null);
   }
+
+  return {
+    coordinate: {
+      "lat": geodata.lat,
+      "lon": geodata.lon
+    },
+    "class": geodata.class,
+    "type": geodata.type
+  };
 }
+
 ```
