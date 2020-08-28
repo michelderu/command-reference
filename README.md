@@ -152,3 +152,7 @@ function geocode (address, api_key, log=false) {
 }
 
 ```
+
+## Gradle
+### Create an offline gradle package
+See https://github.com/marklogic-community/ml-gradle/tree/master/examples/disconnected-project-using-plugins-and-gradlew
