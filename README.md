@@ -42,6 +42,10 @@ sudo yum install libgcc libgcc.i686 libstdc++ libstdc++.i686
 sudo rpm -i /tmp/MarkLogicConverters.rpm
 ```
 
+### Gradle
+#### Create an offline gradle package
+See https://github.com/marklogic-community/ml-gradle/tree/master/examples/disconnected-project-using-plugins-and-gradlew
+
 ## Docker
 ### Saving an image to a TAR file
 `docker save marklogic > marklogic-9.0-8.tar`
@@ -170,6 +174,45 @@ function geocode (address, api_key, log=false) {
 
 ```
 
-## Gradle
-### Create an offline gradle package
-See https://github.com/marklogic-community/ml-gradle/tree/master/examples/disconnected-project-using-plugins-and-gradlew
+## Java
+### Java version switching
+Find versions and path locations:
+```sh
+/usr/libexec/java_home -V
+```
+Or find a spexific version:
+```sh
+/usr/libexec/java_home -v 15
+```
+Set the Java version you want to use in `.bashrc`:
+```sh
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+```
+Or add all options for easy switching (example):
+```
+export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
+export JAVA_9_HOME=$(/usr/libexec/java_home -v9)
+export JAVA_10_HOME=$(/usr/libexec/java_home -v10)
+export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+export JAVA_12_HOME=$(/usr/libexec/java_home -v12)
+export JAVA_13_HOME=$(/usr/libexec/java_home -v13)
+export JAVA_14_HOME=$(/usr/libexec/java_home -v14)
+export JAVA_15_HOME=$(/usr/libexec/java_home -v15)
+
+alias java8='export JAVA_HOME=$JAVA_8_HOME'
+alias java9='export JAVA_HOME=$JAVA_9_HOME'
+alias java10='export JAVA_HOME=$JAVA_10_HOME'
+alias java11='export JAVA_HOME=$JAVA_11_HOME'
+alias java12='export JAVA_HOME=$JAVA_12_HOME'
+alias java13='export JAVA_HOME=$JAVA_13_HOME'
+alias java14='export JAVA_HOME=$JAVA_14_HOME'
+alias java15='export JAVA_HOME=$JAVA_15_HOME'
+
+# default to Java 15
+java15
+```
+And the switch by:
+```sh
+java8
+java -version
+```
