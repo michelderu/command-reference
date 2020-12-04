@@ -189,7 +189,7 @@ Set the Java version you want to use in `.bashrc`:
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
 ```
 Or add all options for easy switching (example):
-```
+```sh
 export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
 export JAVA_9_HOME=$(/usr/libexec/java_home -v9)
 export JAVA_10_HOME=$(/usr/libexec/java_home -v10)
