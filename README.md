@@ -79,6 +79,23 @@ docker container rm <id>
 docker image rm <id>
 ```
 
+### Reverse engineer docker run command
+Basics:
+```sh
+docker inspect foo/bar
+```
+Or using rekcod without installing the npm package.   
+Replace `$CONTAINER_NAME` with the docker container name:
+```sh
+docker run -it --rm --volume /var/run/docker.sock:/var/run/docker.sock --privileged docker sh -c "apk add --no-cache nodejs nodejs-npm && npm i -g rekcod && rekcod $CONTAINER_NAME"
+```
+Or using rekcod as an npm package. 
+Replace `$CONTAINER_NAME` with the docker container name:
+```sh 
+npm i -g rekcod
+rekcod $CONTAINER_NAME
+```
+
 ## Shell tools
 ### Split a file on newlines
 Takes a file `1000_device_data.json` and splits it into numbered output files.
