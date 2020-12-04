@@ -211,7 +211,7 @@ alias java15='export JAVA_HOME=$JAVA_15_HOME'
 # default to Java 15
 java15
 ```
-And the switch by:
+And then switch by:
 ```sh
 java8
 java -version
