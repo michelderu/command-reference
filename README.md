@@ -11,6 +11,57 @@ git commit -am "Removed unnecessary files"
 git push
 ```
 
+## DataStax
+### Run DSE as a docker container
+Start DSE with Spark enabled.
+Port mappings:
+1. 7077 - Spark Master
+2. 7080 - Spark Master UI
+3. 9042 - Native Clients Port
+4. 9077 - Always On SQL
+5. 9091 - DSE Studio
+6. 8888 - OPS Center
+7. 10000 - Spark SQL ODBC/JDBC
+
+```sh
+docker run \
+    -e DS_LICENSE=accept \
+    -v `pwd`/dse/data/cassandra:/var/lib/cassandra \
+    -v `pwd`/dse/data/spark:/var/lib/spark \
+    -v `pwd`/dse/data/dsefs:/var/lib/dsefs \
+    -v `pwd`/dse/log/cassandra:/var/log/cassandra \
+    -v `pwd`/dse/log/spark:/var/log/spark \
+    -p 7077:7077 \
+    -p 7080:7080 \
+    -p 9077:9077 \
+    -p 9042:9042 \
+    -p 10000:10000 \
+    --name my-dse \
+    -d datastax/dse-server:6.8.7-1 \
+    -k
+```
+### Find out status
+```sh
+docker exec -it my-dse nodetool status
+```
+
+### Open interactive bash
+Regular user vs root user
+```sh
+docker exec -it my-dse bash
+docker exec -it --user root my-dse bash
+```
+
+### Open interactive CQLsh
+```sh
+docker exec -it my-dse cqlsh
+```
+
+### View logs
+```sh
+docker logs my-dse
+```
+
 ## MarkLogic
 ### Database configuration in json format
 Get the json structure of database configurations: http://localhost:8002/manage/v2/. Navigate to the information you need and add `&format=json` to the URL.
@@ -175,6 +226,21 @@ function geocode (address, api_key, log=false) {
 ```
 
 ## Java
+### Install on MacOS
+Find versions:
+```sh
+brew update
+brew search openjdk
+```
+Find minor version:
+```sh
+brew info adoptopenjdk8
+```
+Install a specific version:
+```sh
+brew cask install adoptopenjdk8
+```
+
 ### Java version switching
 Find versions and path locations:
 ```sh
