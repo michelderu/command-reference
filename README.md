@@ -152,6 +152,11 @@ rekcod $CONTAINER_NAME
 ```
 
 ## Shell tools
+### Show open TCP/UDP ports
+```sh
+sudo lsof -i -P -n
+sudo lsof -i -P -n | grep LISTEN
+```
 ### Split a file on newlines
 Takes a file `1000_device_data.json` and splits it into numbered output files.
 ```sh
@@ -282,3 +287,34 @@ And then switch by:
 java8
 java -version
 ```
+
+# Concepts
+
+## Kubernetes
+From https://medium.com/google-cloud/kubernetes-101-pods-nodes-containers-and-clusters-c1509e409e16
+### Nodes
+A node is the smallest unit of computing hardware in Kubernetes. It is a representation of a single machine in your cluster. In most production systems, a node will likely be either a physical machine in a datacenter, or virtual machine hosted on a cloud provider like Google Cloud Platform.
+### Cluster
+In Kubernetes, nodes pool together their resources to form a more powerful machine.  
+It shouldn’t matter to the program, or the programmer, which individual machines are actually running the code.
+### Persistent volumes
+To store data permanently, Kubernetes uses Persistent Volumes.  
+This can be thought of as plugging an external hard drive in to the cluster.  
+Persistent Volumes provide a file system that can be mounted to the cluster, without being associated with any particular node.
+### Containers
+Programs running on Kubernetes are packaged as Linux containers.  
+Containerization allows you to create self-contained Linux execution environments.  
+Creating a container can be done programmatically, allowing powerful CI and CD pipelines to be formed.  
+If each container has a tight focus, updates are easier to deploy and issues are easier to diagnose.  
+### Pods
+Unlike other systems you may have used in the past, Kubernetes doesn’t run containers directly; instead it wraps one or more containers into a higher-level structure called a pod.  
+Any containers in the same pod will share the same resources and local network.  
+Pods are used as the unit of replication in Kubernetes.  
+Pods can hold multiple containers, but you should limit yourself when possible. Because pods are scaled up and down as a unit, all containers in a pod must scale together, regardless of their individual needs.
+### Deployments
+Pods are usually managed by one more layer of abstraction: the deployment.  
+A deployment’s primary purpose is to declare how many replicas of a pod should be running at a time. When a deployment is added to the cluster, it will automatically spin up the requested number of pods, and then monitor them. If a pod dies, the deployment will automatically re-create it.  
+### Ingress
+By default, Kubernetes provides isolation between pods and the outside world.  
+There are multiple ways to add ingress to your cluster. The most common ways are by adding either an Ingress controller, or a LoadBalancer.  
+
