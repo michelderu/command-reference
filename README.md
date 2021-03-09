@@ -98,6 +98,9 @@ sudo rpm -i /tmp/MarkLogicConverters.rpm
 See https://github.com/marklogic-community/ml-gradle/tree/master/examples/disconnected-project-using-plugins-and-gradlew
 
 ## Docker
+### Build an image from a Dockerfile
+`docker build -t <tag-name> .`
+
 ### Saving an image to a TAR file
 `docker save marklogic > marklogic-9.0-8.tar`
 
