@@ -246,7 +246,7 @@ brew info adoptopenjdk8
 ```
 Install a specific version:
 ```sh
-brew cask install adoptopenjdk8
+brew install --cask adoptopenjdk8
 ```
 
 ### Java version switching
